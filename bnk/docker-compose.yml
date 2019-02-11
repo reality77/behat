@@ -1,0 +1,30 @@
+version: "2"
+
+services:
+  # Behat
+  behat:
+    hostname: behat
+    image: docksal/behat
+    environment:
+      - https_proxy=http://193.56.47.8:8080
+      - http_proxy=http://193.56.47.8:8080
+      - no_proxy=localhost,.douane,.tma,10.107.4.38,web,database,redis,bouchon-api-rights,mailhog,selenium
+    volumes:
+      - .:/src
+    # Run a built-in web server for access to HTML reports
+    ports:
+     - 8000:8000
+    entrypoint: "php -S 0.0.0.0:8000"
+  # Selenium
+  browser:
+    image: selenium/standalone-chrome-debug:3.14.0-europium
+    #image: selenium/standalone-chrome:3.14.0-europium
+    hostname: browser
+    ports:
+      - "5905:5900"    # pour image debug uniquement (vnc server)
+    environment:
+      - http_proxy=http://193.56.47.8:8080
+      - https_proxy=http://193.56.47.8:8080
+      - no_proxy=localhost,.douane,.tma,10.107.4.38,web,database,redis,bouchon-api-rights,mailhog,selenium
+      - VNC_NO_PASSWORD=1 # pour image debug uniquement (vnc server)
+
